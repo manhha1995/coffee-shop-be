@@ -15,7 +15,6 @@ import java.util.*;
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
     private User user;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(Objects.nonNull(user) && Objects.nonNull(user.getRole())){
