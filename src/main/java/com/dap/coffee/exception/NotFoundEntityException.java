@@ -10,7 +10,7 @@ public class NotFoundEntityException extends Exception{
     @Getter
     private final String errorField;
 
-    private NotFoundEntityException(String errorField, String message) {
+    public NotFoundEntityException(String errorField, String message) {
         super(message);
         this.errorField = errorField;
     }
