@@ -44,6 +44,11 @@ public class OrderService {
         // call core-service to notify the queue
         // TODO: using event-based or async request
         jmsTemplate.convertAndSend(QueueNames.QUEUE_NEW_ORDER, new Order(entity.getId()));
-        return new ApiResponse<>().ok(MessageResponse.SUCCESS, ModelMapperUtils.toObject(orderRepository.save(order), OrderResponse.class));
+        return ApiResponse.ok(MessageResponse.SUCCESS, ModelMapperUtils.toObject(orderRepository.save(order), OrderResponse.class));
+    }
+
+    public ApiResponse<List<OrderResponse>> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return ApiResponse.ok(MessageResponse.SUCCESS, orders.stream().map(o -> ModelMapperUtils.toObject(o, OrderResponse.class)).collect(Collectors.toList()));
     }
 }

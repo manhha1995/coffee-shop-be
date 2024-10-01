@@ -5,9 +5,9 @@ import com.dap.coffee.model.request.OrderRequest;
 import com.dap.coffee.model.response.OrderResponse;
 import com.dap.coffee.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +16,14 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    @PostMapping
+    @RequestMapping("/order-creation")
     public ApiResponse<OrderResponse> save(@RequestBody OrderRequest request) {
         return orderService.saveOrder(request);
+    }
+
+    @GetMapping("/findAll")
+    public ApiResponse<List<OrderResponse>> getAll() {
+        return orderService.getAllOrders();
     }
 }
