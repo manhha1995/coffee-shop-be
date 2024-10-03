@@ -23,7 +23,6 @@ public class Order implements Serializable {
 
     @Id
     @UuidGenerator
-    @Column(name = "order_id")
     private String id;
 
     private String userId;
