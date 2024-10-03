@@ -5,11 +5,13 @@ import com.dap.coffee.common.MessageResponse;
 import com.dap.coffee.common.QueueNames;
 import com.dap.coffee.entities.Order;
 import com.dap.coffee.entities.OrderItem;
+import com.dap.coffee.exception.NotFoundEntityException;
 import com.dap.coffee.model.request.OrderRequest;
 import com.dap.coffee.model.response.OrderResponse;
 import com.dap.coffee.repository.OrderRepository;
 import com.dap.coffee.utils.ModelMapperUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderService {
-    private final JmsTemplate jmsTemplate;
+//    private final JmsTemplate jmsTemplate;
 
     private final OrderRepository orderRepository;
 
@@ -43,12 +45,28 @@ public class OrderService {
 
         // call core-service to notify the queue
         // TODO: using event-based or async request
-        jmsTemplate.convertAndSend(QueueNames.QUEUE_NEW_ORDER, new Order(entity.getId()));
+//        jmsTemplate.convertAndSend(QueueNames.QUEUE_NEW_ORDER, new Order(entity.getId()));
         return ApiResponse.ok(MessageResponse.SUCCESS, ModelMapperUtils.toObject(orderRepository.save(order), OrderResponse.class));
     }
 
     public ApiResponse<List<OrderResponse>> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return ApiResponse.ok(MessageResponse.SUCCESS, orders.stream().map(o -> ModelMapperUtils.toObject(o, OrderResponse.class)).collect(Collectors.toList()));
+    }
+
+    @SneakyThrows
+    public ApiResponse<OrderResponse> getOrderById(String id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> NotFoundEntityException.of("Order not found"));
+        return ApiResponse.ok(MessageResponse.SUCCESS, ModelMapperUtils.toObject(order, OrderResponse.class));
+    }
+
+    @SneakyThrows
+    public ApiResponse<OrderResponse> updateOrderStatus(String id, String status) {
+        int result = orderRepository.updateStatus(id, status);
+        if (result == 0) {
+            throw new NotFoundEntityException("Order not found", MessageResponse.ERROR);
+        }
+        Order order = orderRepository.findById(id).orElseThrow(() -> NotFoundEntityException.of("Order not found"));
+        return ApiResponse.ok(MessageResponse.SUCCESS, ModelMapperUtils.toObject(order, OrderResponse.class));
     }
 }
