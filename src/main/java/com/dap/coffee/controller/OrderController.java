@@ -16,8 +16,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @PostMapping
-    @RequestMapping("/order-creation")
+    @PostMapping("/order-creation")
     public ApiResponse<OrderResponse> save(@RequestBody OrderRequest request) {
         return orderService.saveOrder(request);
     }

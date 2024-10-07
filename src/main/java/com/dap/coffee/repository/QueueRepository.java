@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface QueueRepository extends JpaRepository<Queue, String> {
-    List<Queue> findByStatus(String status);
+    List<Queue> findQueuesByIdAndStatus(String id, String status);
 }

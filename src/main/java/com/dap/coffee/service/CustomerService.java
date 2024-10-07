@@ -17,17 +17,17 @@ public class CustomerService {
 
     private final QueueRepository queueRepository;
 
-    public CancelOrderResponse cancelOrder(String orderId) {
+    public CancelOrderResponse cancelOrder(String id, String orderId) {
         queueRepository.deleteById(orderId);
         log.info("Order with id {} canceled", orderId);
-        List<Queue> queuesReady = getReadyQueue(QueueStatus.READY);
+        List<Queue> queuesReady = getReadyQueue(id, QueueStatus.READY);
         log.info("Ready queues: {}", queuesReady);
         queuesReady.stream().filter(q -> q.getOrder().getId().equals(orderId)).forEach(q -> q.setStatus(QueueStatus.CANCELED));
 
         return new CancelOrderResponse("Order with id " + orderId + " canceled");
     }
 
-    public List<Queue> getReadyQueue(String status) {
-        return queueRepository.findByStatus(status);
+    public List<Queue> getReadyQueue(String id, String status) {
+        return queueRepository.findQueuesByIdAndStatus(id, status);
     }
 }

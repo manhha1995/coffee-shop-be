@@ -1,9 +1,9 @@
 package com.dap.coffee.entities;
 
+import com.dap.coffee.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,12 +15,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Table(name = "order_item")
-public class OrderItem implements Serializable {
+@EqualsAndHashCode(callSuper = false)
+public class OrderItem extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -4677281933363613383L;
 
     @Id
-    @UuidGenerator
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "product_id")
@@ -29,7 +30,8 @@ public class OrderItem implements Serializable {
     @Column(name = "order_quantity")
     private Integer quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference(value = "order_id")
+    @JoinColumn(name = "order_id")
     private Order order;
 }
