@@ -3,7 +3,6 @@ package com.dap.coffee.entities;
 import com.dap.coffee.common.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
@@ -22,7 +21,7 @@ public class Queue extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
+    
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "queue")
     @JsonManagedReference(value = "queue")
     private Order order;

@@ -14,7 +14,6 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class CustomerService {
-
     private final QueueRepository queueRepository;
 
     public CancelOrderResponse cancelOrder(String id, String orderId) {
