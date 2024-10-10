@@ -1,7 +1,6 @@
 package com.dap.coffee.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,11 +23,15 @@ public class ApiResponse <T> {
     }
 
     public static <T> ApiResponse<T> ok (String message , T data){
-        return new ApiResponse<>(true,"Success", message,data);
+        return of(true,"SUCCESS", message,data);
     }
 
     public static <T> ApiResponse<T> ok(String message) {
-        return ok(message, null);
+        return of(true, "SUCCESS", message, null);
+    }
+
+    public static <T> ApiResponse<T> warning(String message) {
+        return warning(message, null);
     }
 
     public static <T> ApiResponse<T> warning(String message, T data) {
@@ -41,5 +44,13 @@ public class ApiResponse <T> {
 
     public static <T> ApiResponse<T> error(String message) {
         return error(message, null);
+    }
+
+    public static <T> ApiResponse<T> of(boolean success, String code, String message, T data) {
+        return new ApiResponse<>(success, code, message, data);
+    }
+
+    public static <T> ApiResponse<T> accepted(String message, T data) {
+        return of(true, "ACCEPTED", message, data);
     }
 }

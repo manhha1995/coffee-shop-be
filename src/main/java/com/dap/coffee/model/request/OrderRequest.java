@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequest {
-    private String id;
     private String userId;
     private String shopId;
     private List<OrderItemRequest> items;
